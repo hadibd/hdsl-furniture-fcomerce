@@ -1,20 +1,33 @@
 import 'package:hdsl/const.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductDetails extends StatefulWidget {
-  const ProductDetails({Key? key}) : super(key: key);
+  const ProductDetails(
+      {Key? key,
+      required this.imgUrl,
+      required this.title,
+      required this.description,
+      required this.price,
+      required this.rating,
+      required this.catagory})
+      : super(key: key);
+
+  final String imgUrl, title, description, price, catagory, rating;
 
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  //String value = '0';
-  TextEditingController quantityController = TextEditingController(text: '0');
+  TextEditingController quantityController = TextEditingController(text: '1');
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    int price = int.parse(widget.price);
+
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
           constraints: BoxConstraints.expand(),
@@ -29,25 +42,25 @@ class _ProductDetailsState extends State<ProductDetails> {
                     },
                   ),
                   IconButton(
-                      onPressed: () {}, icon: Icon(Icons.favorite_border))
+                      onPressed: () {}, icon: const Icon(Icons.favorite_border))
                 ],
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Image.asset(
-                  'assets/images/furniture_logo.png',
+                child: Image.network(
+                  widget.imgUrl,
                   height: size.height * .25,
                   width: size.width,
                 ),
               ),
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
+                  decoration: const BoxDecoration(
+                      color: Color(0xffF6F7F8),
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(35),
                           topRight: Radius.circular(35))),
-                  padding: EdgeInsets.only(top: 20, left: 24, right: 24),
+                  padding: const EdgeInsets.only(top: 20, left: 24, right: 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -55,8 +68,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Royal Garden Chair',
-                            style: TextStyle(
+                            widget.title,
+                            style: const TextStyle(
                                 fontSize: 22,
                                 fontFamily: 'cormorant',
                                 fontWeight: FontWeight.bold,
@@ -64,24 +77,26 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                           OutlinedButton.icon(
                               style: OutlinedButton.styleFrom(
-                                  shape: StadiumBorder()),
+                                  shape: const StadiumBorder()),
                               onPressed: null,
-                              icon: Icon(Icons.star),
-                              label: Text('4.5'))
+                              icon: const Icon(Icons.star),
+                              label: const Text('4.5'))
                         ],
                       ),
                       Text(
-                        'Brand: RFL',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
+                        'Catagory: ${widget.catagory}',
+                        style: const TextStyle(
+                            fontSize: 12, color: Colors.black54),
                       ),
                       const SizedBox(
                         height: 16,
                       ),
                       Expanded(
                         child: Text(
-                          'Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is available. ',
+                          widget.description,
                           textAlign: TextAlign.justify,
-                          style: TextStyle(fontSize: 15, color: Colors.black54),
+                          style: const TextStyle(
+                              fontSize: 15, color: Colors.black54),
                         ),
                       ),
                       const SizedBox(
@@ -90,7 +105,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
+                          const Text(
                             'Quantity: ',
                             style: TextStyle(
                                 color: Color(textColor),
@@ -100,17 +115,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                             width: 8,
                           ),
                           MaterialButton(
-                            shape: StadiumBorder(),
-                            color: Color(btnColor),
+                            shape: const StadiumBorder(),
+                            color: const Color(btnColor),
                             onPressed: () {
-                              if (int.parse(quantityController.text) > 0) {
+                              if (int.parse(quantityController.text) > 1) {
                                 int value = int.parse(quantityController.text);
                                 quantityController.text =
                                     (value - 1).toString();
+                                price =
+                                    int.parse(quantityController.text) * price;
+
                                 setState(() {});
+                                print(price);
                               }
                             },
-                            child: Text(
+                            child: const Text(
                               '-',
                               style: TextStyle(color: Colors.white),
                             ),
@@ -122,7 +141,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             child: TextField(
                               textAlign: TextAlign.center,
                               controller: quantityController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   isDense: true, border: OutlineInputBorder()),
                             ),
                           ),
@@ -130,14 +149,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                             width: 8,
                           ),
                           MaterialButton(
-                            color: Color(btnColor),
-                            shape: StadiumBorder(),
+                            color: const Color(btnColor),
+                            shape: const StadiumBorder(),
                             onPressed: () {
                               int value = int.parse(quantityController.text);
                               quantityController.text = (value + 1).toString();
+                              price =
+                                  int.parse(quantityController.text) * price;
+
                               setState(() {});
+                              print(price);
                             },
-                            child: Text(
+                            child: const Text(
                               '+',
                               style: TextStyle(color: Colors.white),
                             ),
@@ -147,7 +170,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       const SizedBox(
                         height: 24,
                       ),
-                      Divider(
+                      const Divider(
                         thickness: 1,
                       ),
                       Container(
@@ -155,15 +178,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text('৳100.00',
-                                  style: TextStyle(
+                              Text(
+                                  '৳${int.parse(quantityController.text) * price}',
+                                  style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold)),
                               MaterialButton(
-                                shape: StadiumBorder(),
+                                shape: const StadiumBorder(),
                                 color: Colors.lightGreen,
-                                onPressed: () {},
-                                child: Text(
+                                onPressed: () {
+                                  addToCart(price: price);
+                                },
+                                child: const Text(
                                   'Buy now',
                                 ),
                               )
@@ -178,5 +204,17 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
       ),
     );
+  }
+
+  void addToCart({required int price}) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    await firestore.collection('users').doc(user_id).collection('cart').add({
+      'catagory': widget.catagory,
+      'description': widget.description,
+      'image': widget.imgUrl,
+      'price': '${int.parse(quantityController.text) * price}',
+      'rating': widget.rating,
+      'title': widget.title,
+    });
   }
 }

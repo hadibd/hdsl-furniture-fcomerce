@@ -14,7 +14,16 @@ class itemCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => const ProductDetails()));
+            context,
+            MaterialPageRoute(
+                builder: (_) => ProductDetails(
+                      catagory: itemsData[index]['catagory'],
+                      description: itemsData[index]['description'],
+                      imgUrl: itemsData[index]['image'],
+                      price: itemsData[index]['price'],
+                      title: itemsData[index]['title'],
+                      rating: itemsData[index]['rating'],
+                    )));
       },
       child: Container(
         decoration: BoxDecoration(

@@ -1,3 +1,4 @@
+import 'package:hdsl/const.dart';
 import 'package:hdsl/screens/home_screen.dart';
 import 'package:hdsl/screens/reg_screen.dart';
 import 'package:flutter/material.dart';
@@ -133,6 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 email: emailController.text, password: passwordController.text);
         var user = userCredential.user;
         if (user?.uid != null) {
+          user_id = user?.uid;
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(

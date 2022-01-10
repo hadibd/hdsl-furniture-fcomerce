@@ -10,8 +10,8 @@ class HistoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => ProductDetails()));
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: (_) => ProductDetails()));
       },
       child: Container(
         decoration: BoxDecoration(
