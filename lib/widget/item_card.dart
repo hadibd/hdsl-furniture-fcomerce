@@ -1,35 +1,36 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import 'package:hdsl/screens/product_details.dart';
 
 class itemCard extends StatelessWidget {
-  const itemCard({Key? key, required this.index, required this.topItemsData})
+  const itemCard({Key? key, required this.index, required this.itemsData})
       : super(key: key);
 
-  final index, topItemsData;
+  final index, itemsData;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => ProductDetails()));
+            context, MaterialPageRoute(builder: (_) => const ProductDetails()));
       },
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(16)),
+            color: Color(0xffF6F7F8), borderRadius: BorderRadius.circular(16)),
         height: 150,
         child: Row(
           children: [
             Container(
                 height: 150,
                 width: 120,
-                padding: EdgeInsets.all(16),
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: Color(0xffF6F7F8),
+                  color: const Color(0xffffffff),
                 ),
-                child: Image.asset('assets/images/furniture_logo.png')),
+                child: Image.network(itemsData[index]['image'])),
             Expanded(
                 child: Container(
               padding: const EdgeInsets.only(right: 10, top: 10, bottom: 10),
@@ -38,7 +39,7 @@ class itemCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    topItemsData[index]['title'],
+                    itemsData[index]['title'],
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                         // fontFamily: 'cormorant',
@@ -50,7 +51,7 @@ class itemCard extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    topItemsData[index]['catagory'],
+                    itemsData[index]['catagory'],
                     style:
                         const TextStyle(fontSize: 10, color: Colors.blueAccent),
                   ),
@@ -58,7 +59,7 @@ class itemCard extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    topItemsData[index]['description'],
+                    itemsData[index]['description'],
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
@@ -70,7 +71,7 @@ class itemCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        topItemsData[index]['price'],
+                        itemsData[index]['price'],
                         style: const TextStyle(
                             fontSize: 18,
                             fontFamily: 'pacifico',

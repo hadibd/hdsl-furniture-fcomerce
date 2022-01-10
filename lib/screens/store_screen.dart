@@ -12,23 +12,23 @@ class StoreScreen extends StatefulWidget {
 }
 
 class _StoreScreenState extends State<StoreScreen> {
-  List catagoryList = [
-    'top',
-    'almirah'
-        'alna',
-    'chair',
-    'mirror',
-    'table'
+  List catagoryList = ['top', 'almirah', 'alna', 'chair', 'mirror', 'table'];
+  List catagoryTitle = [
+    'Top item',
+    'Almirah',
+    'Alna',
+    'Chair',
+    'Mirror',
+    'Table'
   ];
-
   int selectedButton = 0;
-  List topItemList = [];
+  List itemList = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getTopItemData();
+    getItemData(collectionName: 'top');
   }
 
   @override
@@ -37,7 +37,7 @@ class _StoreScreenState extends State<StoreScreen> {
       color: const Color(bgColor),
       padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
       constraints: const BoxConstraints.expand(),
-      child: topItemList.isEmpty
+      child: itemList.isEmpty
           ? const Center(
               child: CircularProgressIndicator(),
             )
@@ -68,13 +68,16 @@ class _StoreScreenState extends State<StoreScreen> {
                       isDense: true,
                       hintText: 'search here',
                       focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white),
+                          borderSide:
+                              const BorderSide(color: Color(0xffF6F7F8)),
                           borderRadius: BorderRadius.circular(16)),
                       enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white),
+                          borderSide:
+                              const BorderSide(color: Color(0xffF6F7F8)),
                           borderRadius: BorderRadius.circular(16)),
                       border: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.white),
+                          borderSide:
+                              const BorderSide(color: Color(0xffF6F7F8)),
                           borderRadius: BorderRadius.circular(16)),
                       suffixIcon: const Icon(Icons.search)),
                 ),
@@ -86,15 +89,17 @@ class _StoreScreenState extends State<StoreScreen> {
                       itemBuilder: (context, index) {
                         return MaterialButton(
                           color: selectedButton == index
-                              ? Color(0xff161E54)
+                              ? const Color(0xff161E54)
                               : null,
                           shape: const StadiumBorder(),
                           onPressed: () {
                             selectedButton = index;
+                            itemList.clear();
+                            getItemData(collectionName: catagoryList[index]);
                             setState(() {});
                           },
                           child: Text(
-                            catagoryList[index],
+                            catagoryTitle[index],
                             style: TextStyle(
                                 color: selectedButton == index
                                     ? Colors.white
@@ -106,14 +111,14 @@ class _StoreScreenState extends State<StoreScreen> {
                 ),
                 Expanded(
                     child: ListView.separated(
-                        itemCount: topItemList.length,
+                        itemCount: itemList.length,
                         separatorBuilder: (context, index) => const SizedBox(
                               height: 10,
                             ),
                         itemBuilder: (context, index) {
                           return itemCard(
                             index: index,
-                            topItemsData: topItemList,
+                            itemsData: itemList,
                           );
                         }))
               ],
@@ -121,12 +126,12 @@ class _StoreScreenState extends State<StoreScreen> {
     );
   }
 
-  getTopItemData() async {
+  getItemData({required String collectionName}) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    var topItems = await firestore.collection('top').get();
+    var topItems = await firestore.collection(collectionName).get();
     for (var item in topItems.docs) {
-      topItemList.add({
+      itemList.add({
         'catagory': item['catagory'],
         'description': item['description'],
         'image': item['image'],
@@ -136,6 +141,6 @@ class _StoreScreenState extends State<StoreScreen> {
       });
     }
     setState(() {});
-    print(topItemList);
+    print(itemList);
   }
 }
