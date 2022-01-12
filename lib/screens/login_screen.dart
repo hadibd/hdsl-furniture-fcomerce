@@ -135,6 +135,10 @@ class _LoginScreenState extends State<LoginScreen> {
         var user = userCredential.user;
         if (user?.uid != null) {
           user_id = user?.uid;
+          // user_name = user?.displayName;
+          // user_phone = user?.phoneNumber;
+          user_mail = user?.email;
+
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(

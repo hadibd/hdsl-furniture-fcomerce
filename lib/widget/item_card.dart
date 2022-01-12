@@ -80,7 +80,7 @@ class itemCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        itemsData[index]['price'],
+                        '৳ ${itemsData[index]['price']}',
                         style: const TextStyle(
                             fontSize: 18,
                             fontFamily: 'pacifico',

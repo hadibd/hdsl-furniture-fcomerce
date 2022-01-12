@@ -21,6 +21,10 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   TextEditingController quantityController = TextEditingController(text: '1');
+
+  bool isAddedToWishlist = false;
+  bool isAddedToCartS = false;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -42,7 +46,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                     },
                   ),
                   IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.favorite_border))
+                      onPressed: () {},
+                      icon: InkWell(
+                          onTap:
+                              isAddedToWishlist ? null : () => addToWishList(),
+                          child: Icon(isAddedToWishlist
+                              ? Icons.favorite_sharp
+                              : Icons.favorite_border)))
                 ],
               ),
               Padding(
@@ -186,9 +196,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                               MaterialButton(
                                 shape: const StadiumBorder(),
                                 color: Colors.lightGreen,
-                                onPressed: () {
-                                  addToCart(price: price);
-                                },
+                                onPressed: isAddedToCartS
+                                    ? null
+                                    : () => addToCart(price: price),
                                 child: const Text(
                                   'Buy now',
                                 ),
@@ -208,7 +218,11 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   void addToCart({required int price}) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    await firestore.collection('users').doc(user_id).collection('cart').add({
+    await firestore
+        .collection('users-cart')
+        .doc(user_mail)
+        .collection('cart')
+        .add({
       'catagory': widget.catagory,
       'description': widget.description,
       'image': widget.imgUrl,
@@ -216,5 +230,43 @@ class _ProductDetailsState extends State<ProductDetails> {
       'rating': widget.rating,
       'title': widget.title,
     });
+    isAddedToCartS = true;
+    showSuccessDialog('Successfully Added to Cart');
+    setState(() {});
+  }
+
+  void addToWishList() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    await firestore
+        .collection('whish-list')
+        .doc(user_mail)
+        .collection('items')
+        .doc()
+        .set({
+      'catagory': widget.catagory,
+      'description': widget.description,
+      'image': widget.imgUrl,
+      'price': widget.price,
+      'rating': widget.rating,
+      'title': widget.title,
+    });
+    showSuccessDialog('Successfully Added to Wishlist');
+    isAddedToWishlist = true;
+    setState(() {});
+  }
+
+  void showSuccessDialog(String msg) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(msg),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Ok'))
+            ],
+          );
+        });
   }
 }

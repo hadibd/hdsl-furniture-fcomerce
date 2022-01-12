@@ -29,9 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 50,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Wishlist'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'History'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Profile'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.favorite), label: 'Wishlist'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart_sharp), label: 'Cart'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
       body: SafeArea(child: pages[index]),

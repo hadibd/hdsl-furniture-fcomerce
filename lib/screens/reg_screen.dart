@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hdsl/const.dart';
 import 'home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -13,7 +14,7 @@ class RegScreen extends StatefulWidget {
 class _RegScreenState extends State<RegScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool isVisible = true;
 
@@ -98,7 +99,7 @@ class _RegScreenState extends State<RegScreen> {
             ),
             TextField(
               keyboardType: TextInputType.number,
-              controller: ageController,
+              controller: phoneController,
               onChanged: (value) {
                 setState(() {});
               },
@@ -107,14 +108,14 @@ class _RegScreenState extends State<RegScreen> {
 
                   isDense: true,
                   prefixIcon: const Icon(Icons.add_box),
-                  suffixIcon: ageController.text.isEmpty
+                  suffixIcon: phoneController.text.isEmpty
                       ? const Text('')
                       : GestureDetector(
                           onTap: () {
-                            ageController.clear();
+                            phoneController.clear();
                           },
                           child: const Icon(Icons.close)),
-                  hintText: 'Your age',
+                  hintText: 'Phone Number',
                   // labelText: 'Email',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(35),
@@ -152,28 +153,7 @@ class _RegScreenState extends State<RegScreen> {
               shape: const StadiumBorder(),
               color: Colors.blueAccent,
               onPressed: () async {
-                // showDialog(
-                //     context: context,
-                //     builder: (context) {
-                //       return SimpleDialog(
-                //         title: const Text('Your submitted data '),
-                //         children: [
-                //           ListTile(
-                //             leading: const Icon(Icons.mail),
-                //             title: Text(emailController.text.toString()),
-                //           ),
-                //           ListTile(
-                //             leading: const Icon(Icons.lock),
-                //             title: Text(passwordController.text.toString()),
-                //           ),
-                //         ],
-                //       );
-                //     });
                 userRegistration();
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => const HomeScreen()));
               },
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -203,7 +183,7 @@ class _RegScreenState extends State<RegScreen> {
   Future<void> userRegistration() async {
     if (emailController.text.isNotEmpty &&
         nameController.text.isNotEmpty &&
-        ageController.text.isNotEmpty &&
+        phoneController.text.isNotEmpty &&
         passwordController.text.isNotEmpty) {
       try {
         UserCredential userCredential = await FirebaseAuth.instance
@@ -214,13 +194,14 @@ class _RegScreenState extends State<RegScreen> {
         var userData = {
           'email': emailController.text,
           'name': nameController.text,
-          'age': ageController.text,
+          'phone': phoneController.text,
         };
-        await firestore.collection('users').doc(user?.uid).set(userData);
+        await firestore.collection('users').doc(user?.email).set(userData);
         emailController.clear();
         nameController.clear();
-        ageController.clear();
+        phoneController.clear();
         passwordController.clear();
+        user_mail = user?.email;
 
         Navigator.pushReplacement(
             context,
