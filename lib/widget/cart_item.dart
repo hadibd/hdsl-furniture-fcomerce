@@ -1,9 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hdsl/screens/product_details.dart';
+import 'package:hdsl/screens/cart_screen.dart';
 
-class HistoryCard extends StatelessWidget {
-  const HistoryCard({
+import '../user.dart';
+
+class CartItem extends StatelessWidget {
+  final index, itemsData;
+
+  const CartItem({
     Key? key,
+    required this.index,
+    required this.itemsData,
   }) : super(key: key);
 
   @override
@@ -15,7 +22,8 @@ class HistoryCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(16)),
+            color: const Color(0xffF6F7F8),
+            borderRadius: BorderRadius.circular(16)),
         height: 160,
         child: Row(
           children: [
@@ -26,46 +34,39 @@ class HistoryCard extends StatelessWidget {
                 margin: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: Color(0xffF6F7F8),
+                  color: Color(0xffffffff),
                 ),
-                child: Image.asset('assets/images/furniture_logo.png')),
+                child: Image.network(itemsData[index]['image'])),
             Expanded(
                 child: Container(
-              padding: EdgeInsets.only(right: 10, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(right: 10, top: 10, bottom: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Royal Garden Chair',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            // fontFamily: 'cormorant',
-                            fontSize: 16,
-                            color: Color(0xff230338),
-                            fontWeight: FontWeight.w500),
-                      ),
-                      CloseButton(
-                        onPressed: () {},
-                      )
-                    ],
+                  Text(
+                    itemsData[index]['title'],
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        // fontFamily: 'cormorant',
+                        fontSize: 16,
+                        color: Color(0xff230338),
+                        fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    'Catagory',
-                    style: TextStyle(fontSize: 10, color: Colors.blueAccent),
+                    'item: ${itemsData[index]['catagory']}',
+                    style:
+                        const TextStyle(fontSize: 10, color: Colors.blueAccent),
                   ),
                   const SizedBox(
                     height: 5,
                   ),
                   Text(
-                    'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without',
+                    itemsData[index]['description'],
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 14, color: Colors.black54),
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(
@@ -73,19 +74,21 @@ class HistoryCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '৳ 100',
-                        style: TextStyle(
+                        '৳ ${itemsData[index]['price']}',
+                        style: const TextStyle(
                             fontSize: 18,
                             fontFamily: 'pacifico',
                             color: Color(0xff230338),
                             fontWeight: FontWeight.bold),
                       ),
                       MaterialButton(
-                        color: Color(0xff161E54),
+                        color: const Color(0xff161E54),
                         shape: const StadiumBorder(),
-                        onPressed: () {},
-                        child: Text(
-                          'Buy',
+                        onPressed: () {
+                          removeItemFromCart();
+                        },
+                        child: const Text(
+                          'Remove',
                           style: TextStyle(color: Colors.white),
                         ),
                       )
@@ -98,5 +101,17 @@ class HistoryCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void removeItemFromCart() {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    firestore
+        .collection('users-cart')
+        .doc(user_mail)
+        .collection('cart')
+        .doc(itemsData[index]['doc-id'])
+        .delete()
+        .then((value) => print('item deleted'));
+    CartScreen().updateData();
   }
 }

@@ -2,6 +2,8 @@ import 'package:hdsl/const.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../user.dart';
+
 class ProductDetails extends StatefulWidget {
   const ProductDetails(
       {Key? key,
@@ -28,7 +30,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    int price = int.parse(widget.price);
+    int price = int.parse(widget.price).floor();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -136,7 +138,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     int.parse(quantityController.text) * price;
 
                                 setState(() {});
-                                print(price);
+                                // print(price);
                               }
                             },
                             child: const Text(
@@ -168,7 +170,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   int.parse(quantityController.text) * price;
 
                               setState(() {});
-                              print(price);
+                              // print(price);
                             },
                             child: const Text(
                               '+',

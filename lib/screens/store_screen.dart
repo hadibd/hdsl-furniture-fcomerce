@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hdsl/widget/item_card.dart';
 
 import '../const.dart';
+import '../user.dart';
 
 class StoreScreen extends StatefulWidget {
   const StoreScreen({Key? key}) : super(key: key);
@@ -26,7 +27,6 @@ class _StoreScreenState extends State<StoreScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getItemData(collectionName: 'top');
   }
@@ -36,9 +36,10 @@ class _StoreScreenState extends State<StoreScreen> {
     return Container(
       color: const Color(bgColor),
       padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
-      constraints: const BoxConstraints.expand(),
+      // constraints: const BoxConstraints.expand(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
             'Best Furniture',
@@ -102,22 +103,25 @@ class _StoreScreenState extends State<StoreScreen> {
                 },
                 itemCount: catagoryList.length),
           ),
-          Expanded(
-              child: itemList.isEmpty
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : ListView.separated(
-                      itemCount: itemList.length,
-                      separatorBuilder: (context, index) => const SizedBox(
-                            height: 10,
-                          ),
-                      itemBuilder: (context, index) {
-                        return itemCard(
-                          index: index,
-                          itemsData: itemList,
-                        );
-                      }))
+          Flexible(
+            fit: FlexFit.loose,
+            child: itemList.isEmpty
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.separated(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: itemList.length,
+                    separatorBuilder: (context, index) => const SizedBox(
+                          height: 10,
+                        ),
+                    itemBuilder: (context, index) {
+                      return itemCard(
+                        index: index,
+                        itemsData: itemList,
+                      );
+                    }),
+          )
         ],
       ),
     );
@@ -138,6 +142,6 @@ class _StoreScreenState extends State<StoreScreen> {
       });
     }
     setState(() {});
-    print(itemList);
+    // print(itemList);
   }
 }

@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hdsl/const.dart';
+import 'package:hdsl/screens/login_screen.dart';
+
+import '../user.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -29,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: EdgeInsets.all(24),
       constraints: BoxConstraints.expand(),
       child: userPhone == null
-          ? CircularProgressIndicator()
+          ? Center(child: CircularProgressIndicator())
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -111,7 +114,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Expanded(
                       child: MaterialButton(
                         color: Colors.blueAccent,
-                        onPressed: () {},
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginScreen()));
+                        },
                         child: const Text('Log out'),
                       ),
                     ),
@@ -125,8 +134,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   editProfile() {
     TextEditingController nameController =
         TextEditingController(text: userName);
-    TextEditingController emailController =
-        TextEditingController(text: userEmail);
     TextEditingController phoneController =
         TextEditingController(text: userPhone);
 
@@ -177,6 +184,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     userEmail = userdata['email'];
     userPhone = userdata['phone'];
     setState(() {});
-    print(userdata['name']);
+    // print(userdata['name']);
   }
 }

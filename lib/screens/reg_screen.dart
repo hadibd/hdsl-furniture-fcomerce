@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hdsl/const.dart';
+import '../user.dart';
 import 'home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -212,11 +213,11 @@ class _RegScreenState extends State<RegScreen> {
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           showWarnigDialog(warning: 'The password provided is too weak.');
-          print('The password provided is too weak.');
+          // print('The password provided is too weak.');
         } else if (e.code == 'email-already-in-use') {
           showWarnigDialog(
               warning: 'The account already exists for that email.');
-          print('The account already exists for that email.');
+          // print('The account already exists for that email.');
         }
       } catch (e) {
         print(e);

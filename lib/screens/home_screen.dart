@@ -1,4 +1,4 @@
-import 'package:hdsl/screens/history_screen.dart';
+import 'package:hdsl/screens/cart_screen.dart';
 import 'package:hdsl/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List pages = [StoreScreen(), WishList(), HistoryScreen(), ProfileScreen()];
+  List pages = const [StoreScreen(), WishList(), CartScreen(), ProfileScreen()];
   int index = 0;
   @override
   Widget build(BuildContext context) {

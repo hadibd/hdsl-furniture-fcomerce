@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../user.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -134,10 +136,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 email: emailController.text, password: passwordController.text);
         var user = userCredential.user;
         if (user?.uid != null) {
-          user_id = user?.uid;
-          // user_name = user?.displayName;
-          // user_phone = user?.phoneNumber;
+          FirebaseFirestore firestore = FirebaseFirestore.instance;
           user_mail = user?.email;
+          user_id = user?.uid;
+
+          var userdata =
+              await firestore.collection('users').doc(user_mail).get();
+
+          user_name = userdata['name'];
+          user_phone = userdata['phone'];
+
+          MyUser().addUser();
 
           Navigator.pushReplacement(
               context,
@@ -148,11 +157,11 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
-          print('No user found for that email.');
+          // print('No user found for that email.');
           showWarnigDialog(warning: 'No user found for that email.');
         } else if (e.code == 'wrong-password') {
           showWarnigDialog(warning: 'Wrong password provided for that user.');
-          print('Wrong password provided for that user.');
+          // print('Wrong password provided for that user.');
         }
       }
     } else {
