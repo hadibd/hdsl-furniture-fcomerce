@@ -112,6 +112,5 @@ class CartItem extends StatelessWidget {
         .doc(itemsData[index]['doc-id'])
         .delete()
         .then((value) => print('item deleted'));
-    CartScreen().updateData();
   }
 }

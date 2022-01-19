@@ -26,17 +26,18 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   bool isAddedToWishlist = false;
   bool isAddedToCartS = false;
+  late int productPrice;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    int price = int.parse(widget.price).floor();
+    productPrice = int.parse(widget.price).floor();
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
-          constraints: BoxConstraints.expand(),
+          constraints: const BoxConstraints.expand(),
           child: Column(
             children: [
               Row(
@@ -134,8 +135,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 int value = int.parse(quantityController.text);
                                 quantityController.text =
                                     (value - 1).toString();
-                                price =
-                                    int.parse(quantityController.text) * price;
+                                productPrice =
+                                    int.parse(quantityController.text) *
+                                        productPrice;
 
                                 setState(() {});
                                 // print(price);
@@ -164,12 +166,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                             color: const Color(btnColor),
                             shape: const StadiumBorder(),
                             onPressed: () {
-                              int value = int.parse(quantityController.text);
-                              quantityController.text = (value + 1).toString();
-                              price =
-                                  int.parse(quantityController.text) * price;
-
-                              setState(() {});
+                              setState(() {
+                                int value = int.parse(quantityController.text);
+                                quantityController.text =
+                                    (value + 1).toString();
+                                productPrice =
+                                    int.parse(quantityController.text) *
+                                        productPrice;
+                              });
+                              print(productPrice);
                               // print(price);
                             },
                             child: const Text(
@@ -190,8 +195,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text(
-                                  '৳${int.parse(quantityController.text) * price}',
+                              Text('৳$productPrice',
                                   style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold)),
@@ -200,7 +204,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 color: Colors.lightGreen,
                                 onPressed: isAddedToCartS
                                     ? null
-                                    : () => addToCart(price: price),
+                                    : () => addToCart(price: productPrice),
                                 child: const Text(
                                   'Buy now',
                                 ),
@@ -228,7 +232,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       'catagory': widget.catagory,
       'description': widget.description,
       'image': widget.imgUrl,
-      'price': '${int.parse(quantityController.text) * price}',
+      'price': '$productPrice',
       'rating': widget.rating,
       'title': widget.title,
     });

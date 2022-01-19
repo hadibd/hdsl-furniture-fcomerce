@@ -10,12 +10,11 @@ class CartScreen extends StatefulWidget {
 
   @override
   _CartScreenState createState() => _CartScreenState();
-
-  void updateData() {}
 }
 
 class _CartScreenState extends State<CartScreen> {
   List cartListItems = [];
+  var finalPrice = 0;
   @override
   void initState() {
     super.initState();
@@ -66,9 +65,9 @@ class _CartScreenState extends State<CartScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Total: 300 ৳',
-                        style: TextStyle(
+                      Text(
+                        'Total: $finalPrice ৳',
+                        style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
@@ -109,7 +108,12 @@ class _CartScreenState extends State<CartScreen> {
         'doc-id': item.reference.id
       });
     }
-    setState(() {});
+    for (var item in cartListItems) {
+      finalPrice = finalPrice + int.parse(item['price']);
+      print(finalPrice);
+      setState(() {});
+    }
+
     // print(cartListItems);
   }
 
